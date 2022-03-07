@@ -9,7 +9,7 @@
     "dev": "nodemon src/server.ts",
     "start": "node dist/server.js",
     "run": "npm dist/app.js",
-    "test": "jasmine"
+    "test": "npm run build && jasmine"
   },
   "repository": {
     "type": "git",

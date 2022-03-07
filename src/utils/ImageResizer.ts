@@ -4,9 +4,10 @@ import chalk from "chalk";
 import fileImage from "../interfaces/fileImage.interface";
 //Resize Image And Cashed it
 
-let outputAuto :string = process.env.outPutImages || "./images/output/",
-    pathAuto :string = process.env.pathImages || "./images/"
-
+let outputAuto :string = process.env['outPutImages'] || "./images/output/",
+    pathAuto :string = process.env['pathImages'] || "./images/"
+console.clear()
+console.log(process.env['outPutImages'])
 export function resizeImage(fileImage: fileImage, outPath: string = outputAuto) : Promise<Buffer|Error> {
     let CheckPath = outPath.split('')
     if(CheckPath[CheckPath.length - 1] !== `/` || CheckPath[CheckPath.length - 1] !== `\\`)

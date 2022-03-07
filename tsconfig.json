@@ -16,6 +16,7 @@
     "exclude": [
         "src/interfaces/*.ts",
         "node_modules",
-        ".idea"
+        ".idea",
+        "spec"
     ]
 }

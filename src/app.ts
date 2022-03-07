@@ -1,18 +1,18 @@
-import express from 'express';
+import express from "express";
 import Controller from "./interfaces/controller.interface";
-import http from 'http';
+import http from "http";
 import chalk from "chalk";
-import errorMiddleware from './middleware/error.middleware'
+import errorMiddleware from "./middleware/error.middleware";
 
 class App {
     public app: express.Application; // Express Application
     public port: number | string; // Port Listen IN
-    public domain: String;
+    public domain: string;
 
     constructor(controllers: Controller[]) {
         this.app = express();
-        const {PORT, DOMAIN} = process.env
-        this.domain = DOMAIN || ' localhost'
+        const {PORT, DOMAIN} = process.env;
+        this.domain = DOMAIN || " localhost";
         this.port = PORT || 8000;
         this.initializeControllers(controllers);
         this.initializeErrorHandling();
@@ -33,7 +33,7 @@ class App {
 
     // Run Server
     public listen() {
-        console.clear()
+        console.clear();
         const http_ = http.createServer(this.app).listen(this.port);
         (http_.listening) ?
             console.log(chalk.bgGreen.black(`SERVER CONNECTED ON [${(this.port == 80) ? "HTTP" : this.port}] => [${(http_.listening).toString().toUpperCase()}]`)) :

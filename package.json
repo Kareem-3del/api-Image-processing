@@ -1,0 +1,49 @@
+{
+  "name": "api-image",
+  "version": "1.0.0",
+  "description": "API-IMAGE PROCESS",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc",
+    "development": "concurrently \"tsc -w\" \"nodemon dist/server.js\"",
+    "dev": "nodemon src/server.ts",
+    "start": "node dist/server.js",
+    "run": "npm dist/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kareem-3del/api-Image-processing.git"
+  },
+  "keywords": [
+    "Image",
+    "Optomizetion",
+    "Kareem",
+    "Adel",
+    "API-Image",
+    "Processing"
+  ],
+  "author": "Kareem-3del",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Kareem-3del/api-Image-processing/issues"
+  },
+  "homepage": "https://github.com/Kareem-3del/api-Image-processing#readme",
+  "dependencies": {
+    "@types/sharp": "^0.29.5",
+    "chalk": "^4.1.2",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "image-size": "^1.0.1",
+    "lint": "^0.7.0",
+    "sharp": "^0.30.2",
+    "ts-node": "^10.7.0"
+  },
+  "devDependencies": {
+    "@types/chalk": "^2.2.0",
+    "@types/express": "^4.17.13",
+    "@types/node": "^17.0.21",
+    "eslint": "^8.10.0",
+    "typescript": "^4.6.2"
+  }
+}

@@ -5,8 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const app_1 = __importDefault(require("./app"));
 const Image_controller_1 = __importDefault(require("./controller/Image.controller"));
+const hello_controller_1 = __importDefault(require("./controller/hello.controller"));
 require("dotenv/config");
-const app = new app_1.default([
+const server = new app_1.default([
+    new hello_controller_1.default(),
     new Image_controller_1.default(),
 ]);
-app.listen();
+server.listen();
+exports.default = server;

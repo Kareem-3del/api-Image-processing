@@ -15,6 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const image_size_1 = __importDefault(require("image-size"));
 const ImageResizer_1 = require("../utils/ImageResizer");
+const chalk_1 = __importDefault(require("chalk"));
+const image_exception_1 = require("../exceptions/image.exception");
 class PostController {
     constructor() {
         this.path = '/image';
@@ -29,11 +31,11 @@ class PostController {
         let files = (0, ImageResizer_1.imagesInFolder)();
         res.json(files);
     }
-    static getImage(req, res) {
+    static getImage(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             let image = req.params.image, width = Number(req.query.width) || Number(req.query.w) || 0, height = Number(req.query.height) || Number(req.query.h) || 0, quality = Number(req.query.quality) || Number(req.query.q) || 100, files = (0, ImageResizer_1.imagesInFolder)(), file = files[files.findIndex(f => image.split('.')[0] === f.fileName)] || false;
             if (!file) {
-                return res.json({ "err": "not found image", file });
+                return next(new image_exception_1.ImageNotFound());
             }
             else {
                 //Check if Resized Options
@@ -48,11 +50,20 @@ class PostController {
                     quality = 100;
             }
             let fileImage = Object.assign(Object.assign({}, file), { width, height, quality });
-            let cashedImage = yield (0, ImageResizer_1.optimizedImage)(fileImage);
-            if (cashedImage) {
+            try {
+                res.header("Content-Type", "image/webp");
+                res.send(yield (0, ImageResizer_1.optimizedImage)(fileImage));
+                console.log(chalk_1.default.bgGreen.black("success : Get file cashed faster performance [DONE]"));
             }
-            else {
-                yield (0, ImageResizer_1.resizeImage)(fileImage, "");
+            catch (err) {
+                console.log(chalk_1.default.bgYellow.black("warning : Not found cashed reprocessing image...."));
+                try {
+                    res.header("Content-Type", "image/webp");
+                    res.send(yield (0, ImageResizer_1.resizeImage)(fileImage));
+                }
+                catch (err) {
+                    next(err);
+                }
             }
         });
     }

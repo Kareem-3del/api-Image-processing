@@ -1,10 +1,15 @@
 import App from './app';
 import ImageController from './controller/Image.controller';
+import HelloController from "./controller/hello.controller";
+
 import 'dotenv/config';
 
-const app = new App(
+const server = new App(
     [
+        new HelloController(),
         new ImageController(),
     ]
 );
-app.listen()
+server.listen()
+
+export default server;

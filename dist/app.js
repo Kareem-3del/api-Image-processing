@@ -11,7 +11,7 @@ class App {
     constructor(controllers) {
         this.app = (0, express_1.default)();
         const { PORT, DOMAIN } = process.env;
-        this.domain = DOMAIN || " localhost";
+        this.domain = DOMAIN || "localhost";
         this.port = PORT || 8000;
         this.initializeControllers(controllers);
         this.initializeErrorHandling();
@@ -27,11 +27,13 @@ class App {
     }
     // Run Server
     listen() {
-        console.clear();
         const http_ = http_1.default.createServer(this.app).listen(this.port);
         (http_.listening) ?
             console.log(chalk_1.default.bgGreen.black(`SERVER CONNECTED ON [${(this.port == 80) ? "HTTP" : this.port}] => [${(http_.listening).toString().toUpperCase()}]`)) :
             console.log(chalk_1.default.bgRed.black(`SERVER CONNECTED ON [${(this.port == 80) ? "HTTP" : this.port}] => [${(http_.listening).toString().toUpperCase()}]`));
+        /*      this.app.listen(this.port,()=>{
+               console.log(chalk.green(`SERVER CONNECTED ON [${chalk.blue((this.port == 80) ? "HTTP" : this.port)}]`));
+           })*/
     }
 }
 exports.default = App;

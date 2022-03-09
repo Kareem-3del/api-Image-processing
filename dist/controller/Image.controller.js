@@ -28,42 +28,42 @@ class PostController {
         this.router.get(`${this.path}/:image`, PostController.getImage);
     }
     static GetAllImages(req, res) {
-        let files = (0, ImageResizer_1.imagesInFolder)();
+        const files = (0, ImageResizer_1.imagesInFolder)();
         res.json(files);
     }
     static getImage(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            let image = req.params.image, width = Number(req.query.width) || Number(req.query.w) || 0, height = Number(req.query.height) || Number(req.query.h) || 0, quality = Number(req.query.quality) || Number(req.query.q) || 100, files = (0, ImageResizer_1.imagesInFolder)(), file = files[files.findIndex(f => image.split('.')[0] === f.fileName)] || false;
+            const image = req.params.image;
+            let width = Number(req.query.width) || Number(req.query.w) || 0, height = Number(req.query.height) || Number(req.query.h) || 0;
+            const quality = Number(req.query.quality) || Number(req.query.q) || 100, files = (0, ImageResizer_1.imagesInFolder)(), file = files[files.findIndex(f => image.split('.')[0] === f.fileName)] ||
+                false;
             if (!file) {
                 return next(new image_exception_1.ImageNotFound());
             }
             else {
                 //Check if Resized Options
                 if (!height || !width) {
-                    let sizes = yield (0, image_size_1.default)(file.path);
+                    const sizes = yield (0, image_size_1.default)(file.path);
                     if (!height)
                         height = Number(sizes.height) || 0;
                     if (!width)
                         width = Number(sizes.width) || 0;
                 }
-                if (quality > 100)
-                    quality = 100;
             }
-            let fileImage = Object.assign(Object.assign({}, file), { width, height, quality });
+            const fileImage = Object.assign(Object.assign({}, file), { width, height, quality });
             try {
-                res.header("Content-Type", "image/webp");
+                res.header('Content-Type', 'image/webp');
                 res.send(yield (0, ImageResizer_1.optimizedImage)(fileImage));
-                console.log(chalk_1.default.bgGreen.black("success : Get file cashed faster performance [DONE]"));
+                console.log(chalk_1.default.green('success : Get file cashed faster performance [DONE]'));
             }
             catch (err) {
-                console.log(chalk_1.default.bgYellow.black("warning : Not found cashed reprocessing image...."));
-                try {
-                    res.header("Content-Type", "image/webp");
-                    res.send(yield (0, ImageResizer_1.resizeImage)(fileImage));
-                }
-                catch (err) {
+                console.log(chalk_1.default.yellow('warning : Not found cashed reprocessing image....'));
+                (0, ImageResizer_1.resizeImage)(fileImage).then((image) => {
+                    res.header('Content-Type', 'image/webp');
+                    res.send(image);
+                }).catch(err => {
                     next(err);
-                }
+                });
             }
         });
     }

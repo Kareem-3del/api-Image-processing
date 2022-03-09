@@ -7,7 +7,7 @@ describe("CHECK IMAGE PROCTORING", () => {
     it("CHECK IF IMAGE RESPONSE",  (done) => {
         request.get("/image/fjord").then(response=>{
             expect(response.headers['content-type']).toBe('image/webp');
-            size = response.headers['content-type']
+            size = response.headers['content-length']
             done();
         });
     });

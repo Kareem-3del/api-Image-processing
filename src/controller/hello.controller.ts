@@ -10,11 +10,11 @@ class HelloController implements Controller {
     this.initializeRoutes();
   }
 
-  private initializeRoutes() {
+  private initializeRoutes(): void {
     this.router.get(this.path, HelloController.sayHello);
   }
 
-  private static sayHello(req: Request, res: Response) {
+  private static sayHello(req: Request, res: Response): void {
     const SERVER_PORT = process.env.SERVER_PORT;
     let { IMAGE_PATH, IMAGE_OUTPUT } = process.env;
     IMAGE_OUTPUT = IMAGE_OUTPUT || './images/output/';

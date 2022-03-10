@@ -1,7 +1,6 @@
 import express from 'express';
 import Controller from './interfaces/controller.interface';
 import http from 'http';
-import chalk from 'chalk';
 import errorMiddleware from './middleware/error.middleware';
 
 class App {
@@ -24,15 +23,18 @@ class App {
 
   // initialize
   private initializeControllers(controllers: Controller[]) {
-    controllers.forEach(controller => {
+    controllers.forEach((controller) => {
       this.app.use('/', controller.router);
     });
   }
 
   // Run Server
   public listen() {
-    const http_ = http.createServer(this.app).listen(this.port);
-    http_.listening
+    http.createServer(this.app).listen(this.port);
+
+    /*    const http_ = http.createServer(this.app).listen(this.port);*/
+
+    /*    http_.listening
       ? console.log(
           chalk.bgGreen.black(
             `SERVER CONNECTED ON [${
@@ -48,7 +50,7 @@ class App {
           )
         );
 
-    /*      this.app.listen(this.port,()=>{
+         this.app.listen(this.port,()=>{
             console.log(chalk.green(`SERVER CONNECTED ON [${chalk.blue((this.port == 80) ? "HTTP" : this.port)}]`));
         })*/
   }

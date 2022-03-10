@@ -6,8 +6,14 @@ import {
   optimizedImage,
   resizeImage,
 } from '../utils/ImageResizer';
-import chalk from 'chalk';
-import { ImageNotFound } from '../exceptions/image.exception';
+// import chalk from 'chalk';
+import {
+  HeightLessThanZero,
+  NotFoundImage,
+  QualityError,
+  ValueNotNumber,
+  WidthLessThanZero,
+} from '../exceptions/image.exception';
 
 class PostController implements Controller {
   public path = '/image';
@@ -17,12 +23,12 @@ class PostController implements Controller {
     this.initializeRoutes();
   }
 
-  private initializeRoutes() {
+  private initializeRoutes(): void {
     this.router.get(this.path, PostController.GetAllImages);
     this.router.get(`${this.path}/:image`, PostController.getImage);
   }
 
-  private static GetAllImages(req: Request, res: Response) {
+  private static GetAllImages(req: Request, res: Response): void {
     const files = imagesInFolder();
     res.json(files);
   }
@@ -31,19 +37,60 @@ class PostController implements Controller {
     req: Request,
     res: Response,
     next: NextFunction
-  ) {
+  ): Promise<void> {
     const image: string = req.params.image;
-    let width: number = Number(req.query.width) || Number(req.query.w) || 0,
-      height: number = Number(req.query.height) || Number(req.query.h) || 0;
-    const quality: number =
-        Number(req.query.quality) || Number(req.query.q) || 100,
-      files = imagesInFolder(),
+    let width: string | number | undefined =
+        req.query.width?.toString() || req.query.w?.toString(),
+      height: string | number | undefined =
+        req.query.height?.toString() || req.query.h?.toString(),
+      quality: string | number | undefined =
+        req.query.quality?.toString() || req.query.q?.toString();
+
+    // Validation OF Values
+
+    if (width && !Number(width)) {
+      return next(new ValueNotNumber('Width'));
+    } else {
+      if (width) {
+        width = Number(width);
+      } else {
+        width = 0;
+      }
+    }
+    if (height && !Number(height)) {
+      return next(new ValueNotNumber('Height'));
+    } else {
+      if (height) {
+        height = Number(height);
+      } else {
+        height = 0;
+      }
+    }
+    if (quality && !Number(quality)) {
+      return next(new ValueNotNumber('Quality'));
+    } else {
+      if (quality) {
+        quality = Number(quality);
+      } else {
+        quality = 100;
+      }
+    }
+
+    if (width < 0) return next(new WidthLessThanZero());
+
+    if (height < 0) return next(new HeightLessThanZero());
+
+    if (quality < 1 || quality > 100) return next(new QualityError());
+
+    // Validation OF Values
+
+    const files = imagesInFolder(),
       file =
-        files[files.findIndex(f => image.split('.')[0] === f.fileName)] ||
+        files[files.findIndex((f) => image.split('.')[0] === f.fileName)] ||
         false;
 
     if (!file) {
-      return next(new ImageNotFound());
+      return next(new NotFoundImage());
     } else {
       //Check if Resized Options
 
@@ -58,17 +105,17 @@ class PostController implements Controller {
     try {
       res.header('Content-Type', 'image/webp');
       res.send(await optimizedImage(fileImage));
-      console.log(
-        chalk.green('success : Get file cashed faster performance [DONE]')
-      );
+      //  console.log(chalk.green('success : Get file cashed faster performance [DONE]'));
     } catch (err) {
-      console.log(chalk.yellow('warning : Not found cashed reprocessing image....'));
-      resizeImage(fileImage).then((image)=>{
-        res.header('Content-Type', 'image/webp');
-        res.send(image);
-      }).catch(err=>{
-        next(err);
-      })
+      //   console.log(chalk.yellow('warning : Not found cashed reprocessing image....'));
+      resizeImage(fileImage)
+        .then((image) => {
+          res.header('Content-Type', 'image/webp');
+          res.send(image);
+        })
+        .catch((err) => {
+          next(err);
+        });
     }
   }
 }

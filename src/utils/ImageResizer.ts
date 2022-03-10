@@ -14,7 +14,7 @@ type fileStatus = {
 
 const { IMAGE_OUTPUT, IMAGE_PATH } = process.env;
 
-export let CheckerFolders = () => {
+export const CheckerFolders = () => {
   if (!IMAGE_OUTPUT) throw 'PLEASE ADD .ENV IMAGE_OUTPUT PATH TO WORK';
   if (!IMAGE_PATH) throw 'PLEASE ADD .ENV IMAGE_OUTPUT PATH TO WORK';
 
